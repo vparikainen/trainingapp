@@ -14,8 +14,6 @@ import { useState } from "react";
 import Customerlist from "./components/Customerlist.jsx";
 import Traininglist from "./components/Traininglist.jsx";
 
-
-
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState(null);
