@@ -4,7 +4,6 @@ import dayjs from "dayjs";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
-import AddTraining from "./AddTraining";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
@@ -59,11 +58,10 @@ function Traininglist() {
     }
   };
 
-  <AddTraining fetchTrainings={fetchTrainings}/> 
+   
   
     return (
     <>
-
       <div className="ag-theme-material" style={{ width: "80%", height: 600 }}>
       <Typography variant="h6" component="div" sx={{ flexGrow: 1}}>
           Trainings

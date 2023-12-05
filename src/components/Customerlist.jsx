@@ -1,7 +1,11 @@
-import { useEffect, useState } from "react";
+import { 
+  useEffect, 
+  useState,
+  useRef } from "react";
 import { AgGridReact } from "ag-grid-react";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import Typography from "@mui/material/Typography";
 import AddCustomer from "./AddCustomer";
 import EditCustomer from "./EditCustomer";
@@ -9,9 +13,11 @@ import AddTraining from "./AddTraining";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
+import { FileDownload } from "@mui/icons-material";
 
 function Customerlist() {
   const [customers, setCustomers] = useState([]);
+  const gridRef = useRef(null);
 
   useEffect(() => {
     fetchCustomers();
@@ -29,7 +35,9 @@ function Customerlist() {
           >
         </Button>
         );
-      }, width: 70
+      }, 
+      exportSuppress: true,
+      width: 70
     },
 
     {
@@ -43,6 +51,7 @@ function Customerlist() {
           />
         );
       },
+      exportSuppress: true,
       width: 70,
     },
     { 
@@ -55,7 +64,7 @@ function Customerlist() {
           customerLink={customerLink}
           />
         );
-    }
+    }, exportSuppress: true,
     },
     { field: "firstname", sortable: true, filter: true, width: 150, },
     { field: "lastname", sortable: true, filter: true, width: 150, },
@@ -97,18 +106,42 @@ function Customerlist() {
     }
   };
 
+  const exportToCSV = () => {
+    if (gridRef && gridRef.current && gridRef.current.api) {
+      const columnsToExport = gridRef.current.columnApi
+        .getAllColumns()
+        .filter(column => !column.getColDef().exportSuppress);
+
+        const params = {
+          columnKeys: columnsToExport.map(column => column.getColId()),
+          fileName: "customers.csv",
+          suppressQuotes: true,
+          includeHeaders: false
+        };
+        
+        gridRef.current.api.exportDataAsCsv(params);
+    }
+    
+  };
+
   return (
     <>
     <AddCustomer fetchCustomers={fetchCustomers} />
+    <Button 
+      startIcon={<FileDownload />}
+      onClick={exportToCSV}
+    ></Button>
       <div className="ag-theme-material" style={{ width: "90%", height: 600 }}>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1}}>
           Customers
         </Typography>
+        
         <AgGridReact
           rowData={customers}
           columnDefs={columnDefs}
           pagination={true}
           paginationAutoPageSize={true}
+          ref={gridRef}
         />
       </div>
     </>

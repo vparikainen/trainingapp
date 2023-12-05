@@ -13,6 +13,7 @@ import { useState } from "react";
 
 import Customerlist from "./components/Customerlist.jsx";
 import Traininglist from "./components/Traininglist.jsx";
+import TrainingCalendar from "./components/TrainingCalendar.jsx";
 
 function App() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -27,6 +28,7 @@ const renderSelectedList = () => {
   switch (selectedMenu) {
     case "Customer": return <Customerlist />;
     case "Training": return <Traininglist />;
+    case "Calendar": return <TrainingCalendar />;
     default: return <Customerlist />
   }
 }
@@ -49,11 +51,6 @@ const renderSelectedList = () => {
           <Drawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
             <List>
               <ListItem>
-                <ListItemButton onClick={() => handleMenuItemClick("Home")}>
-                <ListItemText primary="Home" />
-              </ListItemButton>
-              </ListItem>
-              <ListItem>
                 <ListItemButton onClick={() => handleMenuItemClick("Customer")}>
                 <ListItemText primary="Customer"/>
               </ListItemButton>
@@ -63,6 +60,11 @@ const renderSelectedList = () => {
                 <ListItemText primary="Training"/>
               </ListItemButton>
               </ListItem>    
+              <ListItem>
+                <ListItemButton onClick={() => handleMenuItemClick("Calendar")}>
+                <ListItemText primary="Calendar"/>
+              </ListItemButton>
+              </ListItem>
             </List>
           </Drawer>
 
