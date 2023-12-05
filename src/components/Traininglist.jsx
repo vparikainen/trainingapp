@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
+import Tooltip from "@mui/material/Tooltip";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-material.css";
@@ -16,22 +17,39 @@ function Traininglist() {
   }, []);
 
   const [columnDefs] = useState([
-    { cellRenderer: params =>
-    <Button
-      size="small"
-      startIcon={<DeleteIcon />}
-      onClick={() => deleteTraining(params.data.id)}
-      >
-    </Button>,
-    width: 70 },
+    {
+      cellRenderer: (params) => (
+        <Tooltip title="Delete">
+          <Button
+            size="small"
+            startIcon={<DeleteIcon />}
+            onClick={() => deleteTraining(params.data.id)}
+          ></Button>
+        </Tooltip>
+      ),
+      width: 70,
+    },
     { field: "activity", sortable: true, filter: true },
-    { field: "date", sortable: true, filter: true, valueFormatter: (params) => {
-      return dayjs(params.value).format("DD.MM.YYYY hh:mm")}},
+    {
+      field: "date",
+      sortable: true,
+      filter: true,
+      valueFormatter: (params) => {
+        return dayjs(params.value).format("DD.MM.YYYY hh:mm");
+      },
+    },
     { field: "duration", sortable: true, filter: true },
-    { headerName: "customer", valueGetter: (params) => {
-      return params.data.customer ? `${params.data.customer.firstname} ${params.data.customer.lastname}` : '';
-    }, sortable: true, filter: true },
-]);
+    {
+      headerName: "customer",
+      valueGetter: (params) => {
+        return params.data.customer
+          ? `${params.data.customer.firstname} ${params.data.customer.lastname}`
+          : "";
+      },
+      sortable: true,
+      filter: true,
+    },
+  ]);
 
   const fetchTrainings = () => {
     fetch(import.meta.env.VITE_API_URL + "/gettrainings")
@@ -50,20 +68,18 @@ function Traininglist() {
     if (window.confirm("Are you sure you want to delete training?")) {
       const deleteUrl = `${import.meta.env.VITE_API_URL}/api/trainings/${id}`;
       fetch(deleteUrl, { method: "DELETE" })
-      .then((response) => {
-        if (response.ok) fetchTrainings();
-        else throw new Error("Error in DELETE: " + response.statusText);
-      })
-      .catch((err) => console.error(err))
+        .then((response) => {
+          if (response.ok) fetchTrainings();
+          else throw new Error("Error in DELETE: " + response.statusText);
+        })
+        .catch((err) => console.error(err));
     }
   };
 
-   
-  
-    return (
+  return (
     <>
       <div className="ag-theme-material" style={{ width: "80%", height: 600 }}>
-      <Typography variant="h6" component="div" sx={{ flexGrow: 1}}>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
           Trainings
         </Typography>
         <AgGridReact
